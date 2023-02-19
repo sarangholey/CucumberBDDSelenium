@@ -10,7 +10,7 @@ import io.cucumber.junit.CucumberOptions;
 		
 		features = "classpath:features",
 		glue="vit.automation.stepdefs",
-		tags="@ui",
+		tags="@ProdDesc",
 		plugin = {"pretty", // to generate reports
 	            "html:target/html/htmlreport.html",
 	            "json:target/json/file.json",
