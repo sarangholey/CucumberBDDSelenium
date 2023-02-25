@@ -7,7 +7,7 @@ Scenario: User is able to open the application and able to perform a search oper
 #Given User Opened the browser
 Given User navigated to the landing page of the application
 When User Search for a product "Tablet"
-Then Search result is displayed "Tablet"
+Then Search result is displayed "Tablet Nokia"
 #And browser is closed
 
 @Search

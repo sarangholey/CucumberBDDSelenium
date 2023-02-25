@@ -9,6 +9,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -21,6 +23,7 @@ import io.cucumber.java.Scenario;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import vit.automation.core.WebDriverFactory;
 import vit.automation.pageobjects.LandingPageObjects;
 import vit.automation.pageobjects.ProductDescPageObject;
 import vit.automation.pageobjects.ProductsListingPageObject;
@@ -40,17 +43,12 @@ public class StepDefs {
 	ProductDescPageObject productDescPageObject;
 
 	@Before
-	public void setup(Scenario scn) {
+	public void setup(Scenario scn) throws Exception {
+		
 		this.scn = scn;
-		driver = new ChromeDriver();
+		String browserName = WebDriverFactory.getBrowserName();
+		driver = WebDriverFactory.getWebDriverForBrowser(browserName);
 		webDriverWait = new WebDriverWait(driver, 20);
-		logger.info("Browser Got Set");
-		driver.manage().window().maximize();
-		logger.info("Browser Got maximised");
-		driver.manage().timeouts().implicitlyWait(implicit_wait_timeout_in_sec, TimeUnit.SECONDS);
-		logger.info("Browser Implicit timeout set to ->" + implicit_wait_timeout_in_sec);
-		scn.log("Browser got invoked");
-
 		// Initialize Class objects
 		landingPageObjects = new LandingPageObjects(driver, webDriverWait);
 		productsListingPageObject = new ProductsListingPageObject(driver, webDriverWait);
@@ -58,11 +56,21 @@ public class StepDefs {
 
 	}
 
-	@After
+	@After(order=1)
 	public void tearDown() {
-		driver.quit();
-		logger.info("Browser got closed");
+		WebDriverFactory.quitDriver();
 		scn.log("Browser got closed");
+	}
+	
+	@After(order=2)
+	public void ScreeshotForFailure(Scenario scn) {
+		 if (scn.isFailed()) {
+		        TakesScreenshot scrnShot = (TakesScreenshot)driver;
+		        byte[] data = scrnShot.getScreenshotAs(OutputType.BYTES);
+		        scn.attach(data, "image/png","Failed Step Name: " + scn.getName());
+		    }else{
+		        scn.log("Test case is passed, no screen shot captured");
+		    }
 	}
 
 	@Given("User navigated to the landing page of the application")
