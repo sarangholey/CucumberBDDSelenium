@@ -123,5 +123,15 @@ public class StepDefs {
 		driver.switchTo().window(original);
 		scn.log("Product Description is displayed in new tab");
 	}
+	
+	@When("User Search for product {string}")
+	public void user_search_for_product(String prodName) {
+		landingPageObjects.searchProduct(prodName);
+	}
+	@Then("Search Result page is displayed as {string}")
+	public void search_result_page_is_displayed_as(String prodName) {
+		productsListingPageObject.validateSearchResult(prodName);
+		scn.log("Search result is displayed");
+	}
 
 }
