@@ -10,14 +10,14 @@ import io.cucumber.junit.CucumberOptions;
 		
 		features = "classpath:features",
 		glue="vit.automation.stepdefs",
-		tags="",
+		tags="@FooterLinksLists",
 		plugin = {"pretty", // to generate reports
 	            "html:target/html/htmlreport.html",
 	            "json:target/json/file.json",
 	            },
 		monochrome = true,
 	        publish=true,
-	        dryRun=false 
+	        dryRun=false
 		)
 public class TestRunner {
 
